@@ -1,20 +1,21 @@
-import banco
+from banco import ContaBancaria
 
 print('INSTRUÇÕES AO USUÁRIO:')
-print("DIGITE '1' PARA VERIFICAR SALDO'")
+print("DIGITE '1' PARA VERIFICAR SALDO")
 print("DIGITE '2' PARA DEPOSITAR")
 print("DIGITE '3' PARA SACAR")
-print("DIGITE '4' PARA CONFERIR UMA CONTA.")
-print("DIGITE '5' PARA CADASTRAR OUTRA CONTA.")
+print("DIGITE '4' PARA CONFERIR UMA CONTA")
+print("DIGITE '5' PARA CADASTRAR OUTRA CONTA")
 print("DIGITE '6' PARA TRANSFERIR")
 print("DIGITE '7' PARA APAGAR UMA CONTA")
+print("DIGITE '8' PARA SAIR")
 
 # Dicionário para armazenar as contas bancárias
 contas = {}
 
 while True:
     try:
-        opcoes = [1, 2, 3, 4, 5, 6,7]
+        opcoes = [1, 2, 3, 4, 5, 6, 7, 8]
 
         print('OLÁ! Vamos iniciar o processo de criação de conta. Responda ao formulário abaixo:')
         numero_conta = int(input('Insira o número da conta: '))
@@ -26,8 +27,9 @@ while True:
         titular = input('Digite o nome do titular: ')
         saldo = float(input('Insira o saldo da conta: '))
 
-        conta = banco.ContaBancaria(titular, saldo)
-        contas[numero_conta] = conta  
+        # Chamando a classe e Armazenando os inputs dentro de um dicionário:
+        conta = ContaBancaria(titular, saldo)
+        contas[numero_conta] = conta
 
         while True:
             opcao = int(input('O que deseja fazer? '))
@@ -46,13 +48,14 @@ while True:
 
             elif opcao == 3:
                 saque = float(input('Digite o valor a ser sacado: '))
+
                 if saque > conta.verificar_saldo():
                     raise ValueError("Você não tem saldo suficiente para essa transferência.")
+
                 conta.sacar(saque)
                 print(f'Seu saldo após o saque realizado é: {conta.verificar_saldo()}')
 
             elif opcao == 4:
-                # Acessando uma conta já cadastrada
                 numero_conta_acesso = int(input('Digite o número da conta que deseja acessar: '))
                 conta_acesso = contas.get(numero_conta_acesso)
 
@@ -62,10 +65,10 @@ while True:
                 else:
                     print("Conta não encontrada.")
 
-            if opcao == 5:
+            elif opcao == 5:
                 break
 
-            if opcao == 6:
+            elif opcao == 6:
                 numero_conta_origem = int(input('Digite o número da conta de origem: '))
                 conta_origem = contas.get(numero_conta_origem)
                 numero_conta_destino = int(input('Digite o número da conta de destino: '))
@@ -73,19 +76,24 @@ while True:
 
                 if conta_origem and conta_destino:
                     valor_transferencia = float(input('Digite o valor a ser transferido: '))
-                    conta_origem.transferir(conta_destino, valor_transferencia)
+                    print(conta_origem.transferir(conta_destino, valor_transferencia))
 
                 else:
                     print("Conta de origem ou conta de destino não encontrada.")
 
-            if opcao == 7:
+            elif opcao == 7:  # Opção de exclusão de uma conta (resolvido)
                 numero_conta_excluida = int(input('Insira o número da conta que será excluída:'))
+
                 if numero_conta_excluida not in contas:
                     print('A conta não foi encontrada.')
                 else:
-                    print(f'O {numero_conta_excluida} foi excluído!')
-                    del[numero_conta_excluida]
-
+                    print(f'A conta {numero_conta_excluida} foi excluída!')
+                    del contas[numero_conta_excluida]
 
     except ValueError:
         print('Ocorreu um erro')
+
+    
+    if opcao == 8:
+        print('Obrigado por utilizar o banco!')
+        break
